@@ -1,8 +1,10 @@
 const database = require("./database");
 
 
+// ---------------- party GET USERS method -------------------
+
 const getUsers = (req, res) => {
-  const initialSql = "select * from users";
+  const initialSql = "SELECT firstname, lastname, city, language FROM users";
   const where = [];
 
   if (req.query.city != null) {
@@ -38,11 +40,13 @@ const getUsers = (req, res) => {
     });
 };
 
+// ---------------- party GET USERS BY ID method -------------------
+
 const getUserById = (req, res) => {
   const id = parseInt(req.params.id);
 
   database
-    .query("select * from users where id = ?", [id])
+    .query("SELECT firstname, lastname, city, language FROM users WHERE id = ?", [id])
     .then(([users]) => {
       if (users[0] != null) {
         res.json(users[0]);
@@ -55,6 +59,8 @@ const getUserById = (req, res) => {
       res.status(500).send("Error retrieving data from database");
     });
 };
+
+// ---------------- party POST USERS method -------------------
 
 const postUser = (req, res) => {
   const { firstname, lastname, email, city, language, hashedPassword } =
@@ -74,6 +80,7 @@ const postUser = (req, res) => {
     });
 };
 
+// ---------------- party UPDATE USERS BY ID method -------------------
 
 const updateUser = (req, res) => {
   const id = parseInt(req.params.id);
@@ -123,12 +130,13 @@ const updateUser = (req, res) => {
     });
 };
 
+// ---------------- party DELETE USERS method -------------------
 
 const deleteUser = (req, res) => {
   const id = parseInt(req.params.id);
 
   database
-    .query("delete from users where id = ?", [id])
+    .query("DELETE FROM users WHERE id = ?", [id])
     .then(([result]) => {
       if (result.affectedRows === 0) {
         res.status(404).send("Not Found");
@@ -141,6 +149,8 @@ const deleteUser = (req, res) => {
       res.status(500).send("Error deleting the user");
     });
 };
+
+// ------------------ EXPORT method ----------------
 
 module.exports = {
   getUsers,
